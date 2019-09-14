@@ -32,8 +32,6 @@ func NewMinWise(h1, h2 Hash64Function, size int) *MinWise {
 		h1:       h1,
 		h2:       h2,
 		minimums: minimums,
-
-		
 	}
 
 }
