@@ -5,23 +5,22 @@ import (
 	"unicode"
 )
 
-type Document struct {
-	Title string
-	Body  string
-}
-
-type FieldDocument struct {
-	Title []string
-	Body  []string
-}
+type ShinglesBytes [][]byte
 
 // Create a new FieldDocument from a Document with Title and Body tokenized
-func (doc *Document) Tokenize() *FieldDocument {
+func BytesTokenizer(s string) ShinglesBytes {
 
+	// Split document by spaces
 	isNotLetter := func(r rune) bool { return !unicode.IsLetter(r) }
+	sShingles := strings.FieldsFunc(s, isNotLetter)
 
-	return &FieldDocument{
-		Title: strings.FieldsFunc(doc.Title, isNotLetter),
-		Body:  strings.FieldsFunc(doc.Body, isNotLetter),
+	// Convert the string to a list of bytes
+	sShinglesBytes := make([][]byte, len(sShingles))
+
+	for i, shingle := range sShingles {
+		sShinglesBytes[i] = []byte(shingle)
+
 	}
+
+	return sShinglesBytes
 }
