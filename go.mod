@@ -1,4 +1,4 @@
-module github.com/hjuhel-cdpq/jloom
+module github.com/hjuhel-cdpq/clueLess
 
 go 1.13
 

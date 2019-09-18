@@ -1,9 +1,11 @@
 package main
 
 import (
-	"github.com/hjuhel-cdpq/jloom/encoder"
-	"github.com/tenfyzhong/cityhash"
 	"fmt"
+
+	"github.com/hjuhel-cdpq/clueLess/encoder"
+	"github.com/hjuhel-cdpq/clueLess/encoder/tokenizer"
+	"github.com/tenfyzhong/cityhash"
 )
 
 // Build a hash function from a seed
@@ -23,13 +25,13 @@ func add(t encoder.CountMinSketchTable, s string, h1, h2 encoder.Hash64Function)
 	mw := encoder.NewMinWise(h1, h2, 100)
 
 	// Append the tokenized string to the mw
-	for _, v := range encoder.BytesTokenizer(s) {
+	for _, v := range tokenizer.BytesTokenizer(s) {
 		mw.Push(v)
 	}
 
 	// Push the min wise to the table
 	count_, err := t.Push(mw.GetSignature())
-	if err!= nil {
+	if err != nil {
 		fmt.Println("Mousp !")
 	}
 
@@ -64,5 +66,4 @@ func main() {
 
 	fmt.Println(mw.Similarity(mw2))
 
-	
 }
