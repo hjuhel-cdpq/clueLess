@@ -19,10 +19,10 @@ func BuildHash64Function(seed uint64) encoder.Hash64Function {
 	return curryHash
 }
 
-func add(t encoder.CountMedianSketchTable, s string, h1, h2 encoder.Hash64Function) (uint8, *encoder.MinWise) {
+func add(t encoder.CountMedianSketchTable, s string, h1, h2 encoder.Hash64Function) (count uint8, mw *encoder.MinWise) {
 
 	// Create a new MinWise Struct
-	mw := encoder.NewMinWise(h1, h2, 100)
+	mw = encoder.NewMinWise(h1, h2, 100)
 
 	// Append the tokenized string to the mw
 	for _, v := range tokenizer.BytesTokenizer(s) {
@@ -35,8 +35,12 @@ func add(t encoder.CountMedianSketchTable, s string, h1, h2 encoder.Hash64Functi
 		fmt.Println("Mousp !")
 	}
 
-	count := count_.(uint8)
-	return count, mw
+	count, ok := count_.(uint8)
+	if !ok {
+		panic("Expecting UINT8 to be returned in the add method")
+	}
+
+	return
 }
 
 func main() {
