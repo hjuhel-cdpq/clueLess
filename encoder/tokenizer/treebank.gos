@@ -38,7 +38,7 @@ var newlines = regexp.MustCompile(`(?:\n|\n\r|\r)`)
 var spaces = regexp.MustCompile(`(?: {2,})`)
 
 var startingQuotes = map[string]*regexp.Regexp{
-	"$1 ``": regexp.MustCompile(`([ (\[{<)"`),
+	"$1 ``": regexp.MustCompile(`'([ (\[{<])"`),
 	"``":    regexp.MustCompile(`^(")`),
 	" ``":   regexp.MustCompile(`( ")`),
 }
