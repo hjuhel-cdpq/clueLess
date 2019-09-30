@@ -2,7 +2,7 @@ package encoder
 
 import (
 	"errors"
-	"math"
+	"sort"
 	"sync"
 )
 
@@ -20,27 +20,31 @@ type CountMedianSketchTable8 struct {
 }
 
 // Implement the Add operation for the countMinSketch 8 table
-func (t *CountMedianSketchTable8) Push(signature []uint64) (minCount interface{}, err error) {
+func (t *CountMedianSketchTable8) Push(signature []uint64) (median interface{}, err error) {
 
 	if uint64(len(signature)) != t.size {
 		err = errors.New("Inconsitent signature size between the set to add and the table size.")
 		return
 	}
 
-	var minCount_ uint8 = math.MaxUint8 // Shadow variable : to specify the emtpy interface
+	counter := make([]uint8, t.size) // Holds the state of the counter
 
 	t.Lock() // Lock the counter during the increment
-	defer t.Unlock()
-
 	for k, v := range signature {
 		v = v % 255     // Ensure that the value is compatible with the size of the array
 		t.table[k][v]++ // Increment the counter for this specific value of the key
-		if minCount_ > t.table[k][v] {
-			minCount_ = t.table[k][v] // Set the min counter to the new minimal value
-		}
+		counter[k] = t.table[k][v]
+	}
+	t.Unlock()
+
+	// Compute the median of the counter
+	sort.Slice(counter, func(i, j int) bool { return counter[i] < counter[j] })
+	if t.size%2 != 0 {
+		median = counter[(t.size-1)/2+1]
+	} else {
+		median = (counter[(t.size)/2-1] + counter[(t.size)/2+1]) / 2
 	}
 
-	minCount = minCount_
 	return
 }
 
