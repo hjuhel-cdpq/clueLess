@@ -19,7 +19,7 @@ func BuildHash64Function(seed uint64) encoder.Hash64Function {
 	return curryHash
 }
 
-func add(t encoder.CountMinSketchTable, s string, h1, h2 encoder.Hash64Function) (uint8, *encoder.MinWise) {
+func add(t encoder.CountMedianSketchTable, s string, h1, h2 encoder.Hash64Function) (uint8, *encoder.MinWise) {
 
 	// Create a new MinWise Struct
 	mw := encoder.NewMinWise(h1, h2, 100)
@@ -46,10 +46,7 @@ func main() {
 	h2 := BuildHash64Function(43)
 
 	// Generate a count table to holds all the minhashs
-	table, err := encoder.NewCountMinSketchTable(100, encoder.UINT8)
-	if err != nil {
-		fmt.Println("Moups")
-	}
+	table := encoder.NewCountMedianSketchTable8(100)
 
 	// Append the two strings...
 	stringtest := "un deux trois quatre cinq six sept huit neuf dix onze douze treize quatorze quinze seize dixsept dixhuit dixneuf vingt"
